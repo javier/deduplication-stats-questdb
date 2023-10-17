@@ -20,7 +20,7 @@ def create_table():
     conn = connect_postgres()
     with conn.cursor() as cur:
         for country in ['ES', 'UK', 'IT', 'DE', 'FR']:
-            cur.execute("""
+            cur.execute(f"""
                         CREATE TABLE IF NOT EXISTS  ecommerce_sample_test_{country} (
                         ts TIMESTAMPTZ,
                         country TEXT,
@@ -57,7 +57,7 @@ def insert_rows(country: str, rows: list, conn: object) -> None:
     cur = conn.cursor()
     t1 = datetime.now()
     inputs = [[row[0], row[1], row[2], row[3], row[4], row[5], row[6]] for row in rows]
-    extras.execute_values(cur, """
+    extras.execute_values(cur, f"""
                           INSERT INTO ecommerce_sample_test_{country} VALUES %s
                           ON CONFLICT(ts, country, category) DO UPDATE
                             SET visits = excluded.visits,
