@@ -1,11 +1,10 @@
-from questdb.ingress import Sender, IngressError, TimestampNanos
+from questdb.ingress import Sender, IngressError, TimestampNanos, TimestampMicros
 import psycopg2
 from psycopg2 import extras
 import csv
 from glob import glob
 from datetime import datetime
 from concurrent.futures import ProcessPoolExecutor
-import multiprocessing as mp
 import sys
 
 def connect_postgres(host: str = '127.0.0.1', user: str = 'admin', pwd: str = 'quest', port: int = 8812, dbname: str = 'qdb'):
@@ -16,7 +15,6 @@ def connect_postgres(host: str = '127.0.0.1', user: str = 'admin', pwd: str = 'q
         return conn
     except psycopg2.Error as e:
         print(f'Had problem connecting with error {e}.')
-
 
 def create_table():
     conn = connect_postgres()
@@ -43,9 +41,6 @@ def pull_data_files(loc: str = '*.csv') -> list:
     files.sort()
     return files
 
-global EPOCHS
-EPOCHS = {'ES': mp.Value('l', 1657888365426838), 'FR': mp.Value('l', 1657888365426838), 'IT': mp.Value('l', 1657888365426838), 'UK': mp.Value('l', 1657888365426838), 'DE': mp.Value('l', 1657888365426838)}
-
 def insert_rows(country, sender, rows: list) -> None:
     t1 = datetime.now()
 
@@ -56,13 +51,12 @@ def insert_rows(country, sender, rows: list) -> None:
             symbols={'country': row[1], 'category': row[2]},
             columns={'visits': int(row[3]), 'unique_visitors': int(row[4]),'avg_unit_price':float(row[5]), 'sales':float(row[6])},
             #at=TimestampNanos.from_datetime(datetime.strptime(row[0], dt_format))
-            at=TimestampNanos(EPOCHS[country].value)
+            at=TimestampNanos(int(row[7]) * 1000)
             )
-            with EPOCHS[country].get_lock():
-                EPOCHS[country].value += 60000000000
 
     t2 = datetime.now()
     return  (t2 - t1).total_seconds()
+
 
 def file_insert(file: str):
     print(f"working on file {file}")
@@ -93,6 +87,7 @@ def file_insert(file: str):
 
     print(f"finished with file {file} time was {total_time}")
 
+
 CHUNK_SIZE = 100000
 
 
@@ -106,15 +101,9 @@ if __name__ == '__main__':
 
     print(f'will process these files: {files}\n')
     create_table()
-    with ProcessPoolExecutor(max_workers=5) as poolparty:
+    with ProcessPoolExecutor(max_workers=8) as poolparty:
        poolparty.map(file_insert, files)
     t2 = datetime.now()
     x = t2 - t1
     print(f"time was {x}")
-
-
-
-
-
-
 
