@@ -34,13 +34,13 @@ def create_table():
 
                         """
                         )
-            cur.execute("""
+            cur.execute(f"""
                     CREATE UNIQUE INDEX IF NOT EXISTS ecommerce_sample_{country}_unique_idx ON ecommerce_sample_test_{country}(ts,country, category);
                         """)
-            cur.execute("""
+            cur.execute(f"""
                     SELECT create_hypertable('ecommerce_sample_{country}_test', 'ts', if_not_exists => TRUE);
                         """)
-            cur.execute("""
+            cur.execute(f"""
                     CREATE INDEX IF NOT EXISTS ecommerce_sample_{country}_idx ON ecommerce_sample_test_{country}(ts,country, category);
 
                         """)
