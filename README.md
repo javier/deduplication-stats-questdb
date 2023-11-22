@@ -1,5 +1,9 @@
 # deduplication-stats-questdb
-Just some scripts to play with event deduplication and QuestDB
+Just some scripts to play with event deduplication and QuestDB. After releasing the `DEDUP` keyword I wanted to have an idea of how much overhead we would have when replaying a stream of events while removing duplicates. I was also curious to see if our overhead was inline with the performance impact deduplication has on other analytical databases. More information in this blog post https://questdb.io/blog/solving-duplicate-data-performant-deduplication/
+
+## disclosure
+
+I ran this experiment using the default installation for QuestDB, Clickhouse, and Timescale. I tried my best to follow documented best practices for ingestion. I am using python with parallel processing, and I used the recommended Python library with the recommended batched strategy for each of the databases. I am sure with some tuning all of them would perform even better, but my goal here was not so much measuring each database with each other, but getting the relative impact of ingesting data with no duplicates and then replaying the ingestion with all duplicates.
 
 ## some details about the experiment
 
