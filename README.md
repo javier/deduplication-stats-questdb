@@ -1,5 +1,5 @@
 # deduplication-stats-questdb
-Just some scripts to play with event deduplication and QuestDB. After releasing the `DEDUP` keyword I wanted to have an idea of how much overhead we would have when replaying a stream of events while removing duplicates. I was also curious to see if our overhead was inline with the performance impact deduplication has on other analytical databases. More information in this blog post https://questdb.io/blog/solving-duplicate-data-performant-deduplication/
+Just some scripts to play with event deduplication and QuestDB. After releasing the `DEDUP` keyword I wanted to have an idea of how much overhead we would have when replaying a stream of events while removing duplicates. I was also curious to see if our overhead was in line with the performance impact deduplication has on other analytical databases. More information in this blog post https://questdb.io/blog/solving-duplicate-data-performant-deduplication/
 
 ## disclosure
 
