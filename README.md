@@ -43,8 +43,7 @@ CREATE TABLE IF NOT EXISTS  ecommerce_sample_test_{country} (
 
 Structure for Timescale
 ```
-cur.execute("""
-                        CREATE TABLE IF NOT EXISTS  ecommerce_sample_{country} (
+CREATE TABLE IF NOT EXISTS  ecommerce_sample_{country} (
                         ts TIMESTAMPTZ,
                         country TEXT,
                         category TEXT,
@@ -54,19 +53,9 @@ cur.execute("""
                         sales DOUBLE  PRECISION NULL,
                         UNIQUE (ts, country, category)
                         );
-
-                        """
-                        )
-            cur.execute("""
-                    CREATE UNIQUE INDEX IF NOT EXISTS ecommerce_sample_{country}_unique_idx ON ecommerce_sample_test(ts,country, category);
-                        """)
-            cur.execute("""
-                    SELECT create_hypertable('ecommerce_sample_{country}_test', 'ts', if_not_exists => TRUE);
-                        """)
-            cur.execute("""
-                    CREATE INDEX IF NOT EXISTS ecommerce_sample_{country}_idx ON ecommerce_sample_test(ts,country, category);
-
-                        """)
+CREATE UNIQUE INDEX IF NOT EXISTS ecommerce_sample_{country}_unique_idx ON ecommerce_sample_test(ts,country, category);
+SELECT create_hypertable('ecommerce_sample_{country}_test', 'ts', if_not_exists => TRUE);
+CREATE INDEX IF NOT EXISTS ecommerce_sample_{country}_idx ON ecommerce_sample_test(ts,country, category);
 ```
 
 The total size of the raw CSVs is about 17Gig and I am reading from a RAM disk to minimise the impact of reading the files. I am reading/parsing/ingesting from up to 8 files in parallel. The scripts are written in Python, so very likely we could optimise ingestion a bit by reducing CSV parsing time using a different language, but this is not a benchmark, we just want a ballpark of the impact of DEDUP on ingestion.
