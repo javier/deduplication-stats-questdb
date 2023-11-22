@@ -5,7 +5,7 @@ Just some scripts to play with event deduplication and QuestDB
 
 I am running this test on an AWS EC2 instance (m6a.4xlarge, 16 CPUs, 64 Gigs of RAM, GP3 EBS volume). I will be ingesting 15 uncompressed CSV files, each containing 12,614,400 rows, for a total of 189,216,000 rows representing 12 years of hourly data. The data represents synthetic ecommerce statistics, with one hourly entry per country (ES, DE, FR, IT, and UK) and category (WOMEN, MEN, KIDS, HOME, KITCHEN).
 
-The dataset I built for this experiment can be found at https://archive.org/details/questdb-csv-dedup-demo-files.
+The dataset I built for this experiment can be found at https://mega.nz/folder/A1BjnSYQ#NQe5qhYLVBqiRwhWRmcVtg.
 
 Data will be ingested into five tables (one per country) with this structure:
 
@@ -66,4 +66,4 @@ cur.execute("""
 ```
 
 The total size of the raw CSVs is about 17Gig and I am reading from a RAM disk to minimise the impact of reading the files. I am reading/parsing/ingesting from up to 8 files in parallel. The scripts are written in Python, so very likely we could optimise ingestion a bit by reducing CSV parsing time using a different language, but this is not a benchmark, we just want a ballpark of the impact of DEDUP on ingestion.
-The dataset I created for this experiment is available at https://archive.org/details/questdb-csv-dedup-demo-files, and the scripts can be found at https://github.com/javier/deduplication-stats-questdb.
+The dataset I created for this experiment is available at https://mega.nz/folder/A1BjnSYQ#NQe5qhYLVBqiRwhWRmcVtg, and the scripts can be found at https://github.com/javier/deduplication-stats-questdb.
